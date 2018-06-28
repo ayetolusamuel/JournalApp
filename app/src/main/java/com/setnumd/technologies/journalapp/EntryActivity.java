@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,7 +18,7 @@ import com.setnumd.technologies.journalapp.contracts.Journal;
 import com.setnumd.technologies.journalapp.database.AppDatabase;
 import com.setnumd.technologies.journalapp.executor.AppExecutors;
 
-public class EntryActivity extends AppCompatActivity {
+public class EntryActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
    // private FirebaseAuth firebaseAuth;
   //  private FirebaseAuth.AuthStateListener authStateListener;
     private TextView textViewUser;
@@ -32,7 +35,8 @@ public class EntryActivity extends AppCompatActivity {
     private String INSTANCE_TASK_ID = "instance_task_id";
     private AppDatabase database;
     public static String EXTRA_TASK_ID = "extra_task_id";
-   // private FirebaseAuth firebaseAuth;
+    private ScrollView scrollView;
+    // private FirebaseAuth firebaseAuth;
    // private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
@@ -40,7 +44,7 @@ public class EntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
         viewConfig();
-
+            scrollView.setOnClickListener(this);
 database = AppDatabase.getInstance(getApplicationContext());
 
             if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_TASK_ID)) {
@@ -95,6 +99,7 @@ database = AppDatabase.getInstance(getApplicationContext());
         editTextTitle = findViewById(R.id.edt_title);
         editTextContent = findViewById(R.id.edt_content);
         savebtn = findViewById(R.id.btn_Save);
+        scrollView = findViewById(R.id.scrollView);
     }
 
 
@@ -162,5 +167,24 @@ database = AppDatabase.getInstance(getApplicationContext());
     protected void onDestroy() {
         super.onDestroy();
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.scrollView ){
+
+            InputMethodManager inputMethodManager = (InputMethodManager)this.getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
+
+        }
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction()==event.ACTION_DOWN){
+            saveToDatabaseButton(v);
+        }
+
+        return false;
     }
 }
