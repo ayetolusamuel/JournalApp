@@ -1,6 +1,7 @@
 package com.setnumd.technologies.journalapp;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -35,8 +38,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     private String INSTANCE_TASK_ID = "instance_task_id";
     private AppDatabase database;
     public static String EXTRA_TASK_ID = "extra_task_id";
-    private ScrollView scrollView;
-    // private FirebaseAuth firebaseAuth;
+   // private ScrollView scrollView;
+    private RelativeLayout relativeLayout;
+    //private ImageView imageView;
    // private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
@@ -44,7 +48,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
         viewConfig();
-            scrollView.setOnClickListener(this);
+
 database = AppDatabase.getInstance(getApplicationContext());
 
             if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_TASK_ID)) {
@@ -99,7 +103,11 @@ database = AppDatabase.getInstance(getApplicationContext());
         editTextTitle = findViewById(R.id.edt_title);
         editTextContent = findViewById(R.id.edt_content);
         savebtn = findViewById(R.id.btn_Save);
-        scrollView = findViewById(R.id.scrollView);
+        relativeLayout = findViewById(R.id.relativeLayout);
+        //imageView = findViewById(R.id.imageview);
+        relativeLayout.setOnClickListener(this);
+        //imageView.setOnClickListener(this);
+       // savebtn.setOnClickListener(this);
     }
 
 
@@ -130,35 +138,36 @@ database = AppDatabase.getInstance(getApplicationContext());
     }
 
 
-  private void insertToDb(){
+  private void insertToDb() {
 
       String user, title, content;
       title = editTextTitle.getText().toString();
       content = editTextContent.getText().toString();
       user = email;
-        final Journal journal = new Journal(user,title,content);
-      AppExecutors.getInstance().diskIO().execute(new Runnable() {
-          @Override
-          public void run() {
+      if (!title.matches("") && !content.matches("")) {
+          final Journal journal = new Journal(user, title, content);
+          AppExecutors.getInstance().diskIO().execute(new Runnable() {
+              @Override
+              public void run() {
+                  System.out.println("id " + mTaskId + "\t" + DEFAULT_TASK_ID);
+                  if (mTaskId == DEFAULT_TASK_ID) {
+                      // insert new task
+                      database.diaryDao().insertDiary(journal);
+                  } else {
+                      //update task
+                      journal.setId(mTaskId);
+                      database.diaryDao().updateDiary(journal);
+                  }
+                  finish();
 
-              if (mTaskId == DEFAULT_TASK_ID) {
-                  // insert new task
-                  database.diaryDao().insertDiary(journal);
-              } else {
-                  //update task
-                  journal.setId(mTaskId);
-                  database.diaryDao().updateDiary(journal);
               }
-              finish();
-
-          }
-      });
+          });
 
 
-     
-
+      } else {
+          System.out.println("Fill neccessary fields..");
+      }
   }
-
     public void saveToDatabaseButton(View view) {
         insertToDb();
     }
@@ -171,7 +180,7 @@ database = AppDatabase.getInstance(getApplicationContext());
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.scrollView ){
+        if(v.getId() == R.id.relativeLayout){
 
             InputMethodManager inputMethodManager = (InputMethodManager)this.getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
@@ -182,6 +191,7 @@ database = AppDatabase.getInstance(getApplicationContext());
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction()==event.ACTION_DOWN){
+            System.out.println("clicked");
             saveToDatabaseButton(v);
         }
 

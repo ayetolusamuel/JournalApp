@@ -6,48 +6,64 @@
     android:layout_height="match_parent"
     android:paddingTop="16dp"
     android:paddingLeft="16dp"
-    android:id="@+id/scrollView"
-    tools:context=".EntryActivity">
+     tools:context=".EntryActivity"
+    android:background="@drawable/background">
+
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout"
+        >
 
         <TextView
             android:id="@+id/userTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:fontFamily="cursive"
 
+            android:fontFamily="cursive"
             android:text="user"
-            android:textSize="20sp"
-            android:layout_alignParentRight="true" />
+            android:textColor="@color/common_google_signin_btn_text_dark_default"
+            android:textSize="20sp" />
+
         <EditText
             android:id="@+id/edt_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:hint="enter title here"
-            android:layout_marginTop="20dp"/>
+            android:textColorHint="@color/common_google_signin_btn_text_dark_default"
+            android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
         <AutoCompleteTextView
             android:id="@+id/edt_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/edt_title"
             android:layout_marginTop="50dp"
             android:hint="enter Note here"
-            android:layout_below="@+id/edt_title"/>
+            android:textColorHint="@color/common_google_signin_btn_text_dark_default"
+            android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
         <Button
             android:id="@+id/btn_Save"
-            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_below="@+id/edt_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:onClick="saveToDatabaseButton"
+            android:fontFamily="cursive"
+            android:textStyle="bold"
+            android:textSize="30sp"
             android:text="Save"
-            android:onClick="saveToDatabaseButton"/>
+            android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
     </RelativeLayout>
 
