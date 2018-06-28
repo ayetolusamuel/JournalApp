@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private ProgressBar progressBar;
+    public static String userName;
 
 
     @Override
@@ -52,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
+                    userName = firebaseAuth.getCurrentUser().getDisplayName();
                     Intent intent = new Intent(MainActivity.this, JournalActivity.class);
-                    intent.putExtra("email", firebaseAuth.getCurrentUser().getEmail());
-                    startActivity(new Intent(MainActivity.this, JournalActivity.class));
+                    startActivity(intent);
                 }
             }
         };

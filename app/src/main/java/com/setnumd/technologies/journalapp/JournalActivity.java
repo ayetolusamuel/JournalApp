@@ -32,7 +32,10 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     RecyclerView recyclerView;
     private AppDatabase mdb;
    // JournalAdapter.ItemClickListener onItemClickListener;
-    private String EXTRA_DIARY_ID = "extra_journal_id";
+
+    public static final String DEFAULT_JOURNAL_VALUE = "journal_id";
+    private static final int DEFAULT_JOURNAL_ID = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,8 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() == null){
                    Intent intent = new Intent(JournalActivity.this, MainActivity.class);
-                    startActivity(intent);
+
+                   startActivity(intent);
                 }
 
             }
@@ -80,8 +84,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
             public void onClick(View view) {
                 // Create a new intent to start an AddTaskActivity
                 Intent addTaskIntent = new Intent(JournalActivity.this, EntryActivity.class);
-                addTaskIntent.putExtra(ButtonVerification,"verification");
-                startActivity(addTaskIntent);
+               startActivity(addTaskIntent);
             }
         });
         
@@ -144,7 +147,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
 
 
         Intent intent = new Intent(JournalActivity.this, EntryActivity.class);
-        intent.putExtra(EXTRA_DIARY_ID,itemId);
+        intent.putExtra(EntryActivity.EXTRA_TASK_ID,itemId);
         startActivity(intent);
     }
 }
