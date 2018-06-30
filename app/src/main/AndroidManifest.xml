@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +22,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".EntryActivity" />
-        <activity android:name=".JournalActivity" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".JournalActivity"
+            android:label="@string/journal_list"/>
+        <activity android:name=".LoginActivity"
+            android:label="@string/btn_login"></activity>
         <activity android:name=".ResetPasswordActivity"></activity>
     </application>
 

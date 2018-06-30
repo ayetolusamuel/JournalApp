@@ -26,9 +26,9 @@ public class ResetPasswordActivity extends Activity {
         setContentView(R.layout.activity_forget_password);
 
         editTextEmail = (EditText) findViewById(R.id.email);
-        buttonReset = (Button) findViewById(R.id.btn_reset_password);
-        buttonBack = (Button) findViewById(R.id.btn_back);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        buttonReset = findViewById(R.id.btn_reset_password);
+        buttonBack = findViewById(R.id.btn_back);
+        progressBar = findViewById(R.id.progressBar);
 
         auth = FirebaseAuth.getInstance();
 

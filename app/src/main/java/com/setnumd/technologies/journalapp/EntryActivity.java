@@ -27,9 +27,7 @@ import com.setnumd.technologies.journalapp.database.AppDatabase;
 import com.setnumd.technologies.journalapp.executor.AppExecutors;
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
-   // private FirebaseAuth firebaseAuth;
-  //  private FirebaseAuth.AuthStateListener authStateListener;
-    private TextView textViewUser;
+   private TextView textViewUser;
     private EditText editTextTitle,editTextContent;
     private String email;
     public static final String DEFAULT_JOURNAL_VALUE = "journal_id";
@@ -37,16 +35,13 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     private final static int DEFAULT_TASK_ID = -1;
 
 
-    private ImageButton savebtn;
+    private ImageButton saveButton;
     private int mTaskId = DEFAULT_TASK_ID;
 
     private String INSTANCE_TASK_ID = "instance_task_id";
     private AppDatabase database;
     public static String EXTRA_TASK_ID = "extra_task_id";
-   // private ScrollView scrollView;
-    private RelativeLayout relativeLayout;
-    //private ImageView imageView;
-   // private FirebaseAuth.AuthStateListener authStateListener;
+   private RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,18 +58,10 @@ database = AppDatabase.getInstance(getApplicationContext());
             }
 
 
-
-       // firebaseAuth = FirebaseAuth.getInstance();
-
-
-
             Intent intent = getIntent();
             if (intent != null && intent.hasExtra(EXTRA_TASK_ID)) {
-               (savebtn).setImageResource(R.drawable.update);
-             //  savebtn.setBackgroundResource(R.drawable.update);
-                System.out.println("id " + mTaskId + "\t" + DEFAULT_TASK_ID);
+               (saveButton).setImageResource(R.drawable.update);
 
-                System.out.println("update");
 
                 if (mTaskId == DEFAULT_TASK_ID) {
 
@@ -93,16 +80,13 @@ database = AppDatabase.getInstance(getApplicationContext());
 
 
     private void viewConfig() {
-       // textViewUser = findViewById(R.id.userTextView);
-        editTextTitle = findViewById(R.id.edt_title);
+       editTextTitle = findViewById(R.id.edt_title);
         editTextContent = findViewById(R.id.edt_content);
-        savebtn = findViewById(R.id.btn_Save);
+        saveButton = findViewById(R.id.btn_Save);
         relativeLayout = findViewById(R.id.relativeLayout);
-        //imageView = findViewById(R.id.imageview);
         relativeLayout.setOnClickListener(this);
 
-        //imageView.setOnClickListener(this);
-       // savebtn.setOnClickListener(this);
+
     }
 
 
@@ -116,14 +100,9 @@ database = AppDatabase.getInstance(getApplicationContext());
 
 
 
-
-
-    //}
-
     private void populateUI(Journal task) {
         // COMPLETED (7) return if the task is null
-        System.out.println("Task "+task);
-        if (task == null) {
+       if (task == null) {
             return;
         }
 
@@ -135,10 +114,10 @@ database = AppDatabase.getInstance(getApplicationContext());
 
   private void insertToDb() {
 
-      String user, title, content;
+      String title, content;
       title = editTextTitle.getText().toString();
       content = editTextContent.getText().toString();
-      user = email;
+
       if (!title.matches("") && !content.matches("")) {
           final Journal journal = new Journal( title, content);
           AppExecutors.getInstance().diskIO().execute(new Runnable() {
@@ -186,10 +165,8 @@ database = AppDatabase.getInstance(getApplicationContext());
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction()==event.ACTION_DOWN){
-            System.out.println("clicked");
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction()==event.ACTION_DOWN)
             saveToDatabaseButton(v);
-        }
 
         return false;
     }
