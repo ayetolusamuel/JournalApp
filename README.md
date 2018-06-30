@@ -10,3 +10,7 @@ The content of the app can be viewed by user
 Android Studio - The IDE used
 Firebase - Cloud database for users data
 Room - local database used
+
+
+#link to Apk file
+https://drive.google.com/open?id=1q80k-cZMu2zLNoCwWPKGQ2CrVQUM0XyZ
