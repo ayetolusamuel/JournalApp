@@ -1,5 +1,6 @@
 package com.setnumd.technologies.journalapp.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -13,8 +14,8 @@ import java.util.List;
 
 @Dao
 public interface JournalDao {
-    @Query("SELECT * FROM journal ORDER BY user")
-    List<Journal> loadAllDiaries();
+    @Query("SELECT * FROM journal ORDER BY id")
+    LiveData<List<Journal>> loadAllDiaries();
 
     @Insert
     void insertDiary(Journal journal);
@@ -23,7 +24,7 @@ public interface JournalDao {
     void updateDiary(Journal journal);
 
     @Query("SELECT * FROM journal where id =:id")
-    Journal loadDiaryById(int id);
+    LiveData<Journal> loadDiaryById(int id);
 
 
 }

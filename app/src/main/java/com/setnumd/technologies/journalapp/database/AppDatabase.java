@@ -14,6 +14,7 @@ public abstract class AppDatabase extends RoomDatabase{
     private static AppDatabase INSTANCE;
     private static Object lock = new Object();
     public abstract JournalDao diaryDao();
+    private static final String DATABASE_NAME ="journal_database";
 
     public static AppDatabase getInstance(final Context context) {
         if (INSTANCE == null){
@@ -21,8 +22,8 @@ public abstract class AppDatabase extends RoomDatabase{
                 if (INSTANCE == null){
                     //create database Here......
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "customer_database")
-                            .allowMainThreadQueries()
+                            AppDatabase.class, DATABASE_NAME)
+                          //  .allowMainThreadQueries()
                             .build();
                 }
             }

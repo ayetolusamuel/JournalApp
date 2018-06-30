@@ -8,20 +8,18 @@ import android.arch.persistence.room.PrimaryKey;
 public class Journal {
    @PrimaryKey(autoGenerate = true)
     int id;
-    String user;
-    String title;
+String title;
     String content;
 
     @Ignore
-    public Journal(String user, String title, String content) {
-        this.user = user;
+    public Journal( String title, String content) {
+
         this.title = title;
         this.content = content;
     }
 
-    public Journal(int id, String user, String title, String content) {
+    public Journal(int id, String title, String content) {
         this.id = id;
-        this.user = user;
         this.title = title;
         this.content = content;
     }
@@ -34,13 +32,6 @@ public class Journal {
         this.id = id;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
 
     public String getTitle() {
         return title;

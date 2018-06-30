@@ -32,6 +32,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="serif-monospace"
             android:textSize="15sp"
+            android:maxLength="300"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
             tools:text="11/11/1111" />
 

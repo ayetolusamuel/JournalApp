@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.setnumd.technologies.journalapp.R;
 import com.setnumd.technologies.journalapp.contracts.Journal;
 
-import org.w3c.dom.Text;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
 
         // Set item views based on your views and data model
         holder.title.setText(journal.getTitle());
-        holder.content.setText(journal.getContent());
+        holder.content.setText(journal.getContent()+"...........");
 
 
     }

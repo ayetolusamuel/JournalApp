@@ -20,9 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".EntryActivity" />
         <activity android:name=".JournalActivity" />
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".ResetPasswordActivity"></activity>
     </application>
 
 </manifest>

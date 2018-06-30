@@ -1,9 +1,12 @@
 package com.setnumd.technologies.journalapp;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -11,10 +14,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.setnumd.technologies.journalapp.contracts.Journal;
@@ -32,7 +37,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     private final static int DEFAULT_TASK_ID = -1;
 
 
-    private Button savebtn;
+    private ImageButton savebtn;
     private int mTaskId = DEFAULT_TASK_ID;
 
     private String INSTANCE_TASK_ID = "instance_task_id";
@@ -49,6 +54,8 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_entry);
         viewConfig();
 
+        editTextTitle.setSelection(editTextTitle.getText().length());
+        editTextContent.setSelection(editTextContent.getText().length());
 database = AppDatabase.getInstance(getApplicationContext());
 
             if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_TASK_ID)) {
@@ -59,53 +66,41 @@ database = AppDatabase.getInstance(getApplicationContext());
 
        // firebaseAuth = FirebaseAuth.getInstance();
 
-       if (MainActivity.userName != null){
-           textViewUser.setText("Welcome "+MainActivity.userName);
-       }
+
 
             Intent intent = getIntent();
             if (intent != null && intent.hasExtra(EXTRA_TASK_ID)) {
-               savebtn.setText("update");
+               (savebtn).setImageResource(R.drawable.update);
+             //  savebtn.setBackgroundResource(R.drawable.update);
+                System.out.println("id " + mTaskId + "\t" + DEFAULT_TASK_ID);
+
+                System.out.println("update");
+
                 if (mTaskId == DEFAULT_TASK_ID) {
-                    // populate the UI
-                    // COMPLETED (3) Assign the value of EXTRA_TASK_ID in the intent to mTaskId
-                    // Use DEFAULT_TASK_ID as the default
+
                     mTaskId = intent.getIntExtra(EXTRA_TASK_ID, DEFAULT_TASK_ID);
-                    // COMPLETED (4) Get the diskIO Executor from the instance of AppExecutors and
-                    // call the diskIO execute method with a new Runnable and implement its run method
-                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    final LiveData<Journal> task = database.diaryDao().loadDiaryById(mTaskId);
+                    task.observe(this, new Observer<Journal>() {
                         @Override
-                        public void run() {
-                            // COMPLETED (5) Use the loadTaskById method to retrieve the task with id mTaskId and
-                            // assign its value to a final TaskEntry variable
-                            final Journal task = database.diaryDao().loadDiaryById(mTaskId);
-                            // COMPLETED (6) Call the populateUI method with the retrieve tasks
-                            // Remember to wrap it in a call to runOnUiThread
-                            // We will be able to simplify this once we learn more
-                            // about Android Architecture Components
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    populateUI(task);
-                                }
-                            });
+                        public void onChanged(@Nullable Journal journal) {
+                            populateUI(journal);
+                            task.removeObserver(this);
                         }
                     });
-                }
-            }
+                }} }
 
 
 
-            
-        }
+
     private void viewConfig() {
-        textViewUser = findViewById(R.id.userTextView);
+       // textViewUser = findViewById(R.id.userTextView);
         editTextTitle = findViewById(R.id.edt_title);
         editTextContent = findViewById(R.id.edt_content);
         savebtn = findViewById(R.id.btn_Save);
         relativeLayout = findViewById(R.id.relativeLayout);
         //imageView = findViewById(R.id.imageview);
         relativeLayout.setOnClickListener(this);
+
         //imageView.setOnClickListener(this);
        // savebtn.setOnClickListener(this);
     }
@@ -145,11 +140,11 @@ database = AppDatabase.getInstance(getApplicationContext());
       content = editTextContent.getText().toString();
       user = email;
       if (!title.matches("") && !content.matches("")) {
-          final Journal journal = new Journal(user, title, content);
+          final Journal journal = new Journal( title, content);
           AppExecutors.getInstance().diskIO().execute(new Runnable() {
               @Override
               public void run() {
-                  System.out.println("id " + mTaskId + "\t" + DEFAULT_TASK_ID);
+
                   if (mTaskId == DEFAULT_TASK_ID) {
                       // insert new task
                       database.diaryDao().insertDiary(journal);
@@ -165,7 +160,8 @@ database = AppDatabase.getInstance(getApplicationContext());
 
 
       } else {
-          System.out.println("Fill neccessary fields..");
+          Toast.makeText(EntryActivity.this, "Fill neccessary fields..",Toast.LENGTH_SHORT).show();
+
       }
   }
     public void saveToDatabaseButton(View view) {

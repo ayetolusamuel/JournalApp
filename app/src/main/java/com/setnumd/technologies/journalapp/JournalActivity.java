@@ -1,8 +1,11 @@
 package com.setnumd.technologies.journalapp;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,15 +29,11 @@ import java.util.List;
 public class JournalActivity extends AppCompatActivity implements JournalAdapter.ItemClickListener{
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
-   private ArrayList<Journal> journalArrayList;
-    public static final String ButtonVerification = "Constant";
+    private ArrayList<Journal> journalArrayList;
     private JournalAdapter journalAdapter;
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private AppDatabase mdb;
-   // JournalAdapter.ItemClickListener onItemClickListener;
 
-    public static final String DEFAULT_JOURNAL_VALUE = "journal_id";
-    private static final int DEFAULT_JOURNAL_ID = -1;
 
 
     @Override
@@ -64,8 +63,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() == null){
                    Intent intent = new Intent(JournalActivity.this, MainActivity.class);
-
-                   startActivity(intent);
+                    startActivity(intent);
                 }
 
             }
@@ -89,6 +87,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         });
         
         mdb = AppDatabase.getInstance(getApplicationContext());
+        retrieveJournal();
     }
 
 
@@ -102,22 +101,20 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     @Override
     protected void onResume() {
         super.onResume();
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+
+
+
+    }
+
+    private void retrieveJournal() {
+        final LiveData<List<Journal>> task = mdb.diaryDao().loadAllDiaries();
+        task.observe(this, new Observer<List<Journal>>() {
             @Override
-            public void run() {
-               final List<Journal> task = mdb.diaryDao().loadAllDiaries();
+            public void onChanged(@Nullable List<Journal> journals) {
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        journalAdapter.setData(task);
-                    }
-                });
-
+                journalAdapter.setData(journals);
             }
         });
-
-
     }
 
     @Override
